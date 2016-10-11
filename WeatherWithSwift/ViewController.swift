@@ -16,13 +16,19 @@ enum JSONError: String, Error {
 class ViewController: UIViewController {
     //MARK - Properties
     let weatherModelManager = WeatherModelManager()
+    let businessLogc = BusinessLogic()
     var weatherService: WeatherWebService?
-    
+
+    //MARK - IBOutlets
     @IBOutlet weak var countryLabel: UILabel!
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var updateButton: UIButton!
     @IBOutlet weak var currentTempLabel: UILabel!
     @IBOutlet weak var mainStatusLabel: UILabel!
+
+    //-------------------------------------------------------------------------------------------
+    //MARK - Life Circle
+    //-------------------------------------------------------------------------------------------
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,7 +37,9 @@ class ViewController: UIViewController {
         self.saveCurrentWeather()
     }
 
+    //-------------------------------------------------------------------------------------------
     //MARK - Private Methods
+    //-------------------------------------------------------------------------------------------
 
     func saveCurrentWeather() {
         weatherService = WeatherWebService()
@@ -46,7 +54,7 @@ class ViewController: UIViewController {
                 print("cityName:\(json.value(forKey: "name") as! String?)")
 
                 self.jsonStringWithPrettyPrint(dictionary: json)
-                self.weatherModelManager.addWeather(dictionary: json)
+                self.businessLogc.saveOrUpdateCurrentWeather(weatherDict: json)
                 let result = self.weatherModelManager.fetchedResultsController.fetchedObjects as? [CurrentWeather]
                 print("city_________:\(result?[0].city)")
                 print("city_________:\(result?[0].date)")

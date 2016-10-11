@@ -12,21 +12,21 @@ import CoreData
 class WeatherModelManager: NSObject {
     //MARK - Properties
     let coreDataManager = CoreDataManager()
+    static let sharedInstance = BusinessLogic()
 
+    //-------------------------------------------------------------------------------------------
     //MARK - Class Methods
+    //-------------------------------------------------------------------------------------------
 
-    func addWeather(dictionary: NSDictionary) {
+    func addWeather(currentWeather: CurrentWeather) {
         
         let weatherEntity = NSEntityDescription.entity(forEntityName: "CurrentWeather", in: fetchedResultsController.managedObjectContext)
         let weatherRecort = CurrentWeather(entity: weatherEntity!, insertInto: fetchedResultsController.managedObjectContext)
 
-        weatherRecort.city = dictionary.value(forKey: "name") as! String?
-        let timeInterval = dictionary.value(forKey: "dt") as! Double
-        weatherRecort.date = Date(timeIntervalSince1970: timeInterval) as NSDate?
-        weatherRecort.currentTemp = dictionary.value(forKeyPath: "main.temp") as! Float
-        let weather = (dictionary.value(forKey: "weather") as! NSArray).firstObject as! NSDictionary
-        weatherRecort.main = weather.value(forKey: "main") as? String
-
+        weatherRecort.city        = currentWeather.city;
+        weatherRecort.date        = currentWeather.date;
+        weatherRecort.currentTemp = currentWeather.currentTemp;
+        weatherRecort.main        = currentWeather.main
         coreDataManager.saveContext();
     }
 
